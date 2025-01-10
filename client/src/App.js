@@ -1,45 +1,40 @@
-import { ConfigProvider, Layout, Menu, theme } from 'antd';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import AnalyticsData from './components/AnalyticsData';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ConfigProvider, Layout, theme } from 'antd';
 import './App.css';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import HomePage from './pages/HomePage';
+import CreatePostPage from './pages/CreatePostPage';
 function App() {
   const { Header, Content, Footer, Sider } = Layout;
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const CLIENT_ID = '826606453095-g87thpv9bgjk4gd1avpn9tlpds87b7ha.apps.googleusercontent.com';
-
   return (
-    <ConfigProvider theme={{ token: { colorPrimary: '#00b96b' } }}>
-      <Layout
-        style={{
-          minHeight: '100vh',
-        }}
-      >
-        <Sider breakpoint="lg" />
-        <Layout>
-          <Header style={{ padding: 0, background: colorBgContainer }} />
-          <Content style={{ margin: '24px 16px 0' }}>
-            <div
-              style={{
-                padding: 24,
-                minHeight: 800,
-                background: colorBgContainer,
-                borderRadius: borderRadiusLG,
-              }}
-            >
-              <GoogleOAuthProvider clientId={CLIENT_ID}>
-                <AnalyticsData />
-              </GoogleOAuthProvider>
-            </div>
-          </Content>
-          <Footer style={{ textAlign: 'center' }}>
-            Ant Design ©{new Date().getFullYear()} Created by Ant UED
-          </Footer>
+    <BrowserRouter>
+      <ConfigProvider theme={{ token: { colorPrimary: '#00b96b' } }}>
+        <Layout
+          style={{
+            minHeight: '100vh',
+          }}
+        >
+          <Layout>
+            <Content>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/" element={<HomePage />} />
+                <Route path="/create-post" element={<CreatePostPage />} />
+              </Routes>
+            </Content>
+            <Footer style={{ textAlign: 'center' }}>
+              Demo project ©{new Date().getFullYear()} Created by Ant UED
+            </Footer>
+          </Layout>
         </Layout>
-      </Layout>
-    </ConfigProvider>
+      </ConfigProvider>
+    </BrowserRouter>
   );
 }
 
