@@ -6,7 +6,7 @@ import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import CreatePostPage from './pages/CreatePostPage';
 function App() {
-  const { Header, Content, Footer, Sider } = Layout;
+  const {  Content, Footer,  } = Layout;
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();

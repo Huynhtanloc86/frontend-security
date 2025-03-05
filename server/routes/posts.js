@@ -1,33 +1,62 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
-const { posts, users } = require('../data/db');
+const { posts } = require('../data/db');
 
-// Lấy tất cả bài viết
-router.get('/', (req, res) => {
-  res.json(posts);
+// Middleware kiểm tra đăng nhập
+const checkAuth = (req, res, next) => {
+  if (req.cookies.session) {
+    next(); // Nếu có cookie, cho phép tiếp tục
+  } else {
+    return res.status(401).json({
+      success: false,
+      message: 'Bạn cần đăng nhập để thực hiện hành động này',
+    });
+  }
+};
+
+// Tạo post mới
+router.post('/', checkAuth, (req, res) => {
+  console.log('reqs', req);
+  try {
+    const { content } = req.body;
+    if (!content) {
+      return res.status(400).json({
+        success: false,
+        message: 'Nội dung xì ta tút không được bỏ trống',
+      });
+    }
+
+    const newPost = {
+      id: Date.now().toString(),
+      content,
+    };
+    posts.push(newPost);
+
+    res.status(200).json({
+      success: true,
+      message: 'Tạo xì ta tút thành công',
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Tạo xì ta tút thất bại',
+    });
+  }
 });
 
-// Tạo bài viết mới
-router.post('/', auth, (req, res) => {
-  const { title, content } = req.body;
-  const newPost = {
-    id: posts.length + 1,
-    title,
-    content,
-    userId: req.user.userId,
-    createdAt: new Date().toISOString()
-  };
-  
-  posts.push(newPost);
-  res.status(201).json(newPost);
+// Lấy tất cả posts
+router.get('/', checkAuth, (req, res) => {
+  try {
+    res.json({
+      success: true,
+      posts: posts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Không thể lấy danh sách bài post',
+    });
+  }
 });
 
-// Lấy bài viết theo id
-router.get('/:id', (req, res) => {
-  const post = posts.find(p => p.id === parseInt(req.params.id));
-  if (!post) return res.status(404).json({ message: 'Không tìm thấy bài viết' });
-  res.json(post);
-});
-
-module.exports = router; 
+module.exports = router;

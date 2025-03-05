@@ -16,16 +16,18 @@ const MainLayout = ({ children }) => {
   return (
     <Layout>
       <Header style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ color: 'white', fontSize: '18px' }}>Blog Demo XSS</div>
-        <Button type="link" onClick={handleLogout} style={{ color: 'white' }}>
-          Đăng xuất
-        </Button>
+        <div className="wrapper">
+          <div style={{ color: 'white', fontSize: '18px' }}>Blog Dễ Dãi</div>
+          <Button type="link" onClick={handleLogout} style={{ color: 'white' }}>
+            Đăng xuất
+          </Button>
+        </div>
       </Header>
       <Content>
-        {children}
+        <div className="wrapper">{children}</div>
       </Content>
     </Layout>
   );
 };
 
-export default MainLayout; 
+export default MainLayout;

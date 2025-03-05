@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { List, Card, message } from 'antd';
-import { Link } from 'react-router-dom';
+import { List, message, Avatar } from 'antd';
 import axios from '../../utils/axios';
+import PostForm from './PostForm';
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
@@ -14,7 +14,7 @@ const PostList = () => {
   const fetchPosts = async () => {
     try {
       const response = await axios.get('/posts');
-      setPosts(response.data);
+      setPosts(response.data.posts);
     } catch (error) {
       message.error('Không thể tải bài viết');
     } finally {
@@ -24,17 +24,17 @@ const PostList = () => {
 
   return (
     <List
-      grid={{ gutter: 16, column: 3 }}
+      header={<PostForm />}
+      bordered
       dataSource={posts}
       loading={loading}
-      renderItem={(post) => (
-        <List.Item>
-          <Card title={post.title}>
-            <p dangerouslySetInnerHTML={{ __html: post.content.substring(0, 100) + '...' }} />
-            <Link to={`/post/${post.id}`}>Xem thêm</Link>
-          </Card>
-        </List.Item>
-      )}
+      renderItem={(item, index) => {
+        return (
+          <List.Item>
+            <div id="message" dangerouslySetInnerHTML={{ __html: item?.content }} />
+          </List.Item>
+        );
+      }}
     />
   );
 };

@@ -1,74 +1,42 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 const { users } = require('../data/db');
-
-const JWT_SECRET = 'your_jwt_secret';
-
-// Thêm màu sắc cho console.log
-const colors = {
-  reset: '\x1b[0m',
-  bright: '\x1b[1m',
-  red: '\x1b[31m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  blue: '\x1b[34m'
-};
 
 // Đăng ký
 router.post('/register', async (req, res) => {
-  console.log('Headers:', req.headers);
-  console.log('Body received:', req.body);
-  console.log('Content-Type:', req.headers['content-type']);
-
   try {
-    console.log(`${colors.blue}[REQUEST] Register attempt for:${colors.reset}`, req.body);
-    
     const { username, password } = req.body;
-    
+
     if (!username || !password) {
-      console.log(`${colors.yellow}[VALIDATION] Missing fields${colors.reset}`);
-      console.log('Missing data - Body:', req.body);
-      return res.status(400).json({ 
+      return res.status(400).json({
+        success: false,
         message: 'Vui lòng cung cấp username và password',
-        received: { username: !!username, password: !!password }
       });
     }
-    
+
     if (users.find(u => u.username === username)) {
-      console.log(`${colors.yellow}[CONFLICT] User already exists:${colors.reset}`, username);
-      return res.status(400).json({ message: 'Người dùng đã tồn tại' });
+      return res.status(400).json({
+        success: false,
+        message: 'Người dùng đã tồn tại',
+      });
     }
 
     const newUser = {
-      id: users.length + 1,
+      id: Date.now().toString(),
       username,
-      password: await bcrypt.hash(password, 10)
+      password,
     };
-    
+
     users.push(newUser);
-    console.log(`${colors.green}[SUCCESS] New user registered:${colors.reset}`, {
-      id: newUser.id,
-      username: newUser.username
-    });
 
-    const token = jwt.sign({ userId: newUser.id }, JWT_SECRET, { expiresIn: '1h' });
-    
-    return res.status(201).json({ 
+    res.status(201).json({
+      success: true,
       message: 'Đăng ký thành công',
-      token,
-      user: {
-        id: newUser.id,
-        username: newUser.username
-      }
     });
-
-  } catch (err) {
-    console.log(`${colors.red}[ERROR] Registration failed:${colors.reset}`, err);
-    return res.status(500).json({ 
-      message: 'Lỗi server',
-      error: err.message 
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 });
@@ -78,27 +46,48 @@ router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const user = users.find(u => u.username === username);
+    const user = users.find(
+      u => u.username === username && u.password === password
+    );
     if (!user) {
-      return res
-        .status(400)
-        .json({ message: 'Thông tin đăng nhập không chính xác' });
+      return res.status(401).json({
+        success: false,
+        message: 'Tên đăng nhập hoặc mật khẩu không đúng',
+      });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res
-        .status(400)
-        .json({ message: 'Thông tin đăng nhập không chính xác' });
-    }
-
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
-      expiresIn: '1h',
+    // Thiết lập cookie
+    res.cookie('session', 'your_session_value', {
+      httpOnly: true, // Không cho phép truy cập cookie từ JavaScript
+      secure: process.env.NODE_ENV === 'production', // Chỉ gửi cookie qua HTTPS trong môi trường sản xuất
+      maxAge: 24 * 60 * 60 * 1000, // Cookie sẽ hết hạn sau 1 ngày
+      sameSite: 'Lax', // Cấu hình SameSite
     });
-    res.json({ token });
-  } catch (err) {
-    res.status(500).send('Lỗi từ server');
+
+    res.status(200).json({
+      success: true,
+      message: 'Đăng nhập thành công',
+      user: {
+        id: user.id,
+        username: user.username,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
+});
+
+router.post('/logout', (req, res) => {
+  req.session.destroy(err => {
+    res.clearCookie('connect.sid'); // Xóa cookie session
+    res.json({
+      success: true,
+      message: 'Đăng xuất thành công',
+    });
+  });
 });
 
 module.exports = router;
