@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { List, message, Avatar } from 'antd';
 import axios from '../../utils/axios';
 import PostForm from './PostForm';
@@ -11,7 +11,7 @@ const PostList = () => {
     fetchPosts();
   }, []);
 
-  const fetchPosts = useCallback(async () => {
+  const fetchPosts = async () => {
     try {
       const response = await axios.get('/posts');
       setPosts(response.data.posts);
@@ -20,17 +20,17 @@ const PostList = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   return (
     <List
-      header={<PostForm fetchPosts={fetchPosts} />}
+      header={<PostForm />}
       bordered
       dataSource={posts}
       loading={loading}
       renderItem={(item, index) => {
         return (
-          <List.Item key={index}>
+          <List.Item>
             <div id="message" dangerouslySetInnerHTML={{ __html: item?.content }} />
           </List.Item>
         );
