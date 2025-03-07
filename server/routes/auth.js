@@ -2,45 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { users } = require('../data/db');
 
-// Đăng ký
-router.post('/register', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Vui lòng cung cấp username và password',
-      });
-    }
-
-    if (users.find(u => u.username === username)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Người dùng đã tồn tại',
-      });
-    }
-
-    const newUser = {
-      id: Date.now().toString(),
-      username,
-      password,
-    };
-
-    users.push(newUser);
-
-    res.status(201).json({
-      success: true,
-      message: 'Đăng ký thành công',
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-});
-
 // Đăng nhập
 router.post('/login', async (req, res) => {
   try {
@@ -81,12 +42,10 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  req.session.destroy(err => {
-    res.clearCookie('connect.sid'); // Xóa cookie session
-    res.json({
-      success: true,
-      message: 'Đăng xuất thành công',
-    });
+  res.clearCookie('session'); // Xóa cookie session
+  res.json({
+    success: true,
+    message: 'Đăng xuất thành công',
   });
 });
 

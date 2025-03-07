@@ -9,20 +9,19 @@ const checkAuth = (req, res, next) => {
   } else {
     return res.status(401).json({
       success: false,
-      message: 'Bạn cần đăng nhập để thực hiện hành động này',
+      msg: 'Bạn cần đăng nhập để thực hiện hành động này',
     });
   }
 };
 
 // Tạo post mới
 router.post('/', checkAuth, (req, res) => {
-  console.log('reqs', req);
   try {
     const { content } = req.body;
     if (!content) {
       return res.status(400).json({
         success: false,
-        message: 'Nội dung xì ta tút không được bỏ trống',
+        msg: 'Nội dung xì ta tút không được bỏ trống',
       });
     }
 
@@ -34,18 +33,18 @@ router.post('/', checkAuth, (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Tạo xì ta tút thành công',
+      msg: 'Tạo xì ta tút thành công',
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Tạo xì ta tút thất bại',
+      msg: 'Tạo xì ta tút thất bại',
     });
   }
 });
 
 // Lấy tất cả posts
-router.get('/', checkAuth, (req, res) => {
+router.get('/', (_, res) => {
   try {
     res.json({
       success: true,

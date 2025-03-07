@@ -1,25 +1,18 @@
+import React, { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import axios from '../../utils/axios';
 
-const PostForm = ({ fetchPosts }) => {
+const PostForm = () => {
   const [form] = Form.useForm();
 
   const onFinish = async (values) => {
-    if (!values.content) {
-      return;
-    }
+    console.log(values);
     try {
-      const response = await axios.post('/posts', values);
-      const { success, msg } = response.data;
-      console.log('response', response);
-      if (success) {
-        message.success(msg);
-        fetchPosts();
-        form.resetFields();
-      } else {
-        message.error(message);
-      }
-    } catch (error) {}
+      await axios.post('/posts', values);
+      message.success('Tạo bài viết thành công!');
+    } catch (error) {
+      message.error('Không thể tạo bài viết');
+    }
   };
 
   return (

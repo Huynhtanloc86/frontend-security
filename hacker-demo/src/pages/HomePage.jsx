@@ -6,7 +6,9 @@ import MainLayout from '../components/Layout/MainLayout';
 const HomePage = () => {
   return (
     <MainLayout>
-      <PostList />
+      <div style={{ padding: '20px' }}>
+        <PostList />
+      </div>
     </MainLayout>
   );
 };
