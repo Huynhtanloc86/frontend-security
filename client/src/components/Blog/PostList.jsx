@@ -13,8 +13,8 @@ const PostList = () => {
 
   const fetchPosts = useCallback(async () => {
     try {
-      const response = await axios.get('/posts');
-      setPosts(response.data.posts);
+      const response = await axios.get('/posts/post_list');
+      setPosts(response.data.posts.reverse());
     } catch (error) {
       message.error('Không thể tải bài viết');
     } finally {

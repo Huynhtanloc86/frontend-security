@@ -31,6 +31,7 @@ const MainLayout = ({ children }) => {
     try {
       await authService.login(values.username, values.password);
       message.success('Đăng nhập thành công!');
+      setUsername(values.username);
       form.resetFields();
       setIsModalOpen(false);
     } catch (error) {

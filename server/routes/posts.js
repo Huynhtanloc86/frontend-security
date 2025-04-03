@@ -14,8 +14,8 @@ const checkAuth = (req, res, next) => {
   }
 };
 
-// Tạo post mới
-router.post('/', checkAuth, (req, res) => {
+// Tạo post mới theo phương thức post
+router.post('/create', checkAuth, (req, res) => {
   try {
     const { content } = req.body;
     if (!content) {
@@ -43,8 +43,37 @@ router.post('/', checkAuth, (req, res) => {
   }
 });
 
+// Tạo post mới theo phương thức get
+router.get('/create', checkAuth, (req, res) => {
+  try {
+    const { content } = req.query;
+    if (!content) {
+      return res.status(400).json({
+        success: false,
+        msg: 'Nội dung xì ta tút không được bỏ trống',
+      });
+    }
+
+    const newPost = {
+      id: Date.now().toString(),
+      content,
+    };
+    posts.push(newPost);
+
+    res.status(200).json({
+      success: true,
+      msg: 'Tạo xì ta tút thành công',
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      msg: 'Tạo xì ta tút thất bại',
+    });
+  }
+});
+
 // Lấy tất cả posts
-router.get('/', (_, res) => {
+router.get('/post_list', (_, res) => {
   try {
     res.json({
       success: true,

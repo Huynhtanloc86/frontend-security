@@ -9,17 +9,21 @@ const PostForm = ({ fetchPosts }) => {
       return;
     }
     try {
-      const response = await axios.post('/posts', values);
+      // const response = await axios.get('/posts/create', { params: values });
+      // http://localhost:5001/api/posts/create?content=bandabihat
+      const response = await axios.post('/posts/create', values);
       const { success, msg } = response.data;
-      console.log('response', response);
       if (success) {
         message.success(msg);
         fetchPosts();
         form.resetFields();
       } else {
-        message.error(message);
+        message.error(msg);
       }
-    } catch (error) {}
+    } catch (error) {
+      const msg = error.response?.data?.msg;
+      msg && message.error(msg || error.message);
+    }
   };
 
   return (
