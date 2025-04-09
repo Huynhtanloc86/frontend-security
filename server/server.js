@@ -6,9 +6,10 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: true, // Cho phép tất cả các origin trong môi trường development
+    credentials: true, // Cho phép gửi credentials (cookies)
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 app.use(express.json());
