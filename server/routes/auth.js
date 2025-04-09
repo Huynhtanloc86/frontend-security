@@ -20,9 +20,9 @@ router.post('/login', async (req, res) => {
     // Thiết lập cookie
     res.cookie('session', 'Đây là session của bạn', {
       maxAge: 24 * 60 * 60 * 1000, // Cookie sẽ hết hạn sau 1 ngày
-      // httpOnly: true, // Không cho phép truy cập cookie từ JavaScript
-      // secure: process.env.NODE_ENV === 'production', // Chỉ gửi cookie qua HTTPS trong môi trường sản xuất
-      // sameSite: 'Lax', // Cấu hình SameSite
+      httpOnly: false, // Cho phép truy cập cookie từ JavaScript
+      secure: false, // Cho phép gửi cookie qua HTTP trong development
+      sameSite: 'Lax', // Cho phép gửi cookie trong một số trường hợp cross-origin
     });
 
     res.status(200).json({
