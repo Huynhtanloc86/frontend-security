@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Layout, Modal, Button } from 'antd';
-import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import { Layout, Modal, Button, Menu } from 'antd';
+import { UserOutlined, LogoutOutlined, HomeOutlined, BugOutlined } from '@ant-design/icons';
 import { Form, Input, message } from 'antd';
 import { authService } from '../../services/auth';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const { Header, Content } = Layout;
 
@@ -10,6 +11,8 @@ const MainLayout = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState(localStorage.getItem('username'));
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [form] = Form.useForm();
 
@@ -41,15 +44,50 @@ const MainLayout = ({ children }) => {
     }
   };
 
+  const menuItems = [
+    {
+      key: '/',
+      icon: <HomeOutlined />,
+      label: 'Trang chủ',
+    },
+    {
+      key: '/reflected-xss',
+      icon: <BugOutlined />,
+      label: 'Reflected XSS Demo',
+    },
+    {
+      key: '/attacker',
+      icon: <BugOutlined />,
+      label: 'DOM XSS Demo',
+    },
+  ];
+
   return (
     <Layout>
-      <Header>
-        <div className="wrapper-header">
-          <div className="header-left">Blog Dễ Dãi</div>
+      <Header style={{ padding: 0 }}>
+        <div
+          className="wrapper-header"
+          style={{ display: 'flex', alignItems: 'center', height: '100%' }}
+        >
+          <div className="header-left" style={{ marginRight: '24px' }}>
+            Blog Dễ Dãi
+          </div>
+          <Menu
+            theme="dark"
+            mode="horizontal"
+            selectedKeys={[location.pathname]}
+            items={menuItems}
+            onClick={({ key }) => navigate(key)}
+            style={{ flex: 1, minWidth: 0 }}
+          />
           <div className="header-right">
             {username ? (
               <>
-                <UserOutlined /> {username} | <LogoutOutlined onClick={handleLogout} />
+                <UserOutlined style={{ marginRight: '10px' }} /> {username} |{' '}
+                <LogoutOutlined
+                  onClick={handleLogout}
+                  style={{ cursor: 'pointer', marginLeft: '10px' }}
+                />
               </>
             ) : (
               <Button onClick={handleLogin}>Đăng nhập</Button>
