@@ -6,6 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="Web site created using create-react-app" />
+
+    <!-- Các header bảo mật -->
+    <!-- X-Frame-Options: Ngăn chặn trang web được load trong iframe -->
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <!-- Content Security Policy: Chính sách bảo mật nội dung -->
+    <!-- default-src 'self': Chỉ cho phép tải tài nguyên từ cùng domain -->
+    <!-- frame-ancestors 'none': Không cho phép nhúng trong iframe -->
+    <!-- script-src: Giới hạn nguồn script -->
+    <!-- style-src: Giới hạn nguồn CSS -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self';"
+    />
+    <!-- X-Content-Type-Options: Ngăn chặn MIME type sniffing -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>Client Security</title>
   </head>

@@ -13,7 +13,7 @@ const ClickJackingAttack = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setUrlIframe('https://365cacuoc.net/');
+    setUrlIframe('http://localhost:3000/');
   };
 
   const handleClickBanner = () => {
