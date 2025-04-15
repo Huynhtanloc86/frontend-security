@@ -19,13 +19,10 @@ const DomXSSPage = () => {
   return (
     <MainLayout>
       <div className="container mx-auto p-4">
-        <Title level={2}>DOM-based XSS Attack Demo</Title>
-        <Card className="mb-4">
-          <Title level={4}>1. Giới thiệu DOM-based XSS</Title>
+        <Card className="mb-4" title="DOM-based XSS là gì?">
           <Paragraph>
-            DOM-based XSS (Cross-Site Scripting) là một loại tấn công mà kẻ tấn công có thể chèn mã
-            JavaScript độc hại vào trang web thông qua việc thao tác với DOM (Document Object
-            Model).
+            DOM-based XSS là một loại tấn công mà kẻ tấn công có thể chèn mã JavaScript độc hại vào
+            trang web thông qua việc thao tác với DOM .
           </Paragraph>
           <Paragraph>
             Khác với Reflected XSS và Stored XSS, DOM-based XSS không cần phản hồi từ server. Lỗ
@@ -34,8 +31,7 @@ const DomXSSPage = () => {
           </Paragraph>
         </Card>
 
-        <Card className="mb-4">
-          <Title level={4}>2. Demo DOM-based XSS</Title>
+        <Card title="Demo DOM-based XSS" className="mb-4">
           <div className="mb-4">
             <Paragraph>
               Trang này chứa lỗ hổng DOM-based XSS trong việc xử lý hash của URL. Khi bạn thêm
@@ -55,7 +51,7 @@ const DomXSSPage = () => {
             <br />
             <Text code>
               {window.location.origin +
-                '/attacker#' +
+                '/dom-xss#' +
                 encodeURIComponent('<img src="x" onerror="alert(\'XSS\')">')}
             </Text>
           </Paragraph>
@@ -77,17 +73,21 @@ const DomXSSPage = () => {
           <Title level={4}>4. Các payload XSS mẫu</Title>
           <ul>
             <li>
-              <Text code>{'<img src="x" onerror="alert(\'XSS\')">'}</Text> - Sử dụng onerror
+              <Text code>{'<img src="x" onerror="alert(\'Attacker DOM-based XSS\')">'}</Text> - Sử
+              dụng onerror
             </li>
             <li>
-              <Text code>{'<svg onload="alert(\'XSS\')">'}</Text> - Sử dụng SVG
+              <Text code>{'<svg onload="alert(\'Attacker DOM-based XSS\')">'}</Text> - Sử dụng SVG
             </li>
             <li>
-              <Text code>{'<iframe onload="alert(\'XSS\')">'}</Text> - Sử dụng iframe
+              <Text code>{'<iframe onload="alert(\'Attacker DOM-based XSS\')">'}</Text> - Sử dụng
+              iframe
             </li>
             <li>
-              <Text code>{'<a href="javascript:alert(\'XSS\')">Click me</a>'}</Text> - Sử dụng
-              javascript: protocol
+              <Text code>
+                {'<a href="javascript:alert(\'Attacker DOM-based XSS\')">Click me</a>'}
+              </Text>
+              - Sử dụng javascript: protocol
             </li>
           </ul>
         </Card>
