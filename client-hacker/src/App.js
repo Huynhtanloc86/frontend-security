@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ConfigProvider, Layout } from 'antd';
 import './App.css';
-import HomePage from './pages/HomePage';
 import CSRFAttackPage from './pages/CSRFAttackPage';
+import ClickJackingAttack from './pages/ClickJackingAttack';
 
 function App() {
   const { Content, Footer } = Layout;
@@ -18,8 +18,8 @@ function App() {
           <Layout>
             <Content>
               <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/csrf-attack" element={<CSRFAttackPage />} />
+                <Route path="/" element={<CSRFAttackPage />} />
+                <Route path="/ccv" element={<ClickJackingAttack />} />
               </Routes>
             </Content>
             <Footer style={{ textAlign: 'center' }}>

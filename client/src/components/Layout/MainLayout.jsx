@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { Layout, Modal, Button, Menu } from 'antd';
-import { UserOutlined, LogoutOutlined, HomeOutlined, BugOutlined } from '@ant-design/icons';
+import {
+  UserOutlined,
+  LogoutOutlined,
+  HomeOutlined,
+  BugOutlined,
+  ReloadOutlined,
+} from '@ant-design/icons';
 import { Form, Input, message } from 'antd';
 import { authService } from '../../services/auth';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -44,6 +50,10 @@ const MainLayout = ({ children }) => {
     }
   };
 
+  const handleRefresh = () => {
+    authService.refresh();
+  };
+
   const menuItems = [
     {
       key: '/',
@@ -56,7 +66,7 @@ const MainLayout = ({ children }) => {
       label: 'Reflected XSS Demo',
     },
     {
-      key: '/attacker',
+      key: '/dom-xss',
       icon: <BugOutlined />,
       label: 'DOM XSS Demo',
     },
@@ -86,6 +96,11 @@ const MainLayout = ({ children }) => {
                 <UserOutlined style={{ marginRight: '10px' }} /> {username} |{' '}
                 <LogoutOutlined
                   onClick={handleLogout}
+                  style={{ cursor: 'pointer', marginLeft: '10px' }}
+                />
+                |{' '}
+                <ReloadOutlined
+                  onClick={handleRefresh}
                   style={{ cursor: 'pointer', marginLeft: '10px' }}
                 />
               </>

@@ -4,7 +4,7 @@ import MainLayout from '../components/Layout/MainLayout';
 
 const { Title, Paragraph, Text } = Typography;
 
-const AttackerPage = () => {
+const DomXSSPage = () => {
   useEffect(() => {
     // Get the hash from URL (vulnerable to XSS)
     const hash = window.location.hash.substring(1);
@@ -114,4 +114,4 @@ const AttackerPage = () => {
   );
 };
 
-export default AttackerPage;
+export default DomXSSPage;

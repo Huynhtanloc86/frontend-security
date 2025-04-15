@@ -12,13 +12,13 @@ const MainLayout = ({ children }) => {
   const menuItems = [
     {
       key: '/',
-      icon: <HomeOutlined />,
-      label: 'Trang chủ',
-    },
-    {
-      key: '/csrf-attack',
       icon: <BugOutlined />,
       label: 'CSRF Attack Demo',
+    },
+    {
+      key: '/ccv',
+      icon: <BugOutlined />,
+      label: 'Click Jacking Attack',
     },
   ];
 

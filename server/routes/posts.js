@@ -87,4 +87,20 @@ router.get('/post_list', (_, res) => {
   }
 });
 
+// refresh post
+router.post('/refresh', (req, res) => {
+  try {
+    posts.splice(2, posts.length - 2);
+    res.status(200).json({
+      success: true,
+      posts: posts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      msg: 'Tạo xì ta tút thất bại',
+    });
+  }
+});
+
 module.exports = router;
