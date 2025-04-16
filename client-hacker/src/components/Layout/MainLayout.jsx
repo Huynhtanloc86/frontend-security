@@ -20,6 +20,11 @@ const MainLayout = ({ children }) => {
       icon: <BugOutlined />,
       label: 'Click Jacking Attack',
     },
+    {
+      key: '/clickjacking-local',
+      icon: <BugOutlined />,
+      label: 'Click Jacking Attack Local',
+    },
   ];
 
   return (
@@ -30,7 +35,7 @@ const MainLayout = ({ children }) => {
           style={{ display: 'flex', alignItems: 'center', height: '100%' }}
         >
           <div className="header-left" style={{ marginRight: '24px' }}>
-            Blog Dễ Dãi
+            Attacker
           </div>
           <Menu
             theme="dark"

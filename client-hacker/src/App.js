@@ -3,6 +3,7 @@ import { ConfigProvider, Layout } from 'antd';
 import './App.css';
 import CSRFAttackPage from './pages/CSRFAttackPage';
 import ClickJackingAttack from './pages/ClickJackingAttack';
+import ClickJackingLocal from './pages/ClickjakingLocal';
 
 function App() {
   const { Content, Footer } = Layout;
@@ -20,6 +21,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<CSRFAttackPage />} />
                 <Route path="/ccv" element={<ClickJackingAttack />} />
+                <Route path="/clickjacking-local" element={<ClickJackingLocal />} />
               </Routes>
             </Content>
             <Footer style={{ textAlign: 'center' }}>
